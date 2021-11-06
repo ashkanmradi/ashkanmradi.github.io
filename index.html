@@ -855,7 +855,8 @@
 
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <form action="https://formspree.io/f/xbjqvqrz" method="POST" role="form" class="php-email-form" id="my-form">
+              <p id="my-form-status" style="color: green; font-size: x-large;"></p>
               <div class="form-row">
                 <div class="col-md-6 form-group">
                   <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
@@ -875,11 +876,10 @@
                 <div class="validate"></div>
               </div>
               <div class="mb-3">
-                <div class="loading">Loading</div>
+                <!-- <div class="loading">Loading</div> -->
                 <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
               </div>
-              <div class="text-center"><button type="submit">Send Message</button></div>
+              <div class="text-center"><button type="submit" id="my-form-button">Send Message</button></div>
             </form>
 
           </div>
@@ -931,5 +931,29 @@
   <script src="assets/js/main.js"></script>
 
 </body>
+
+<script>
+  var form = document.getElementById("my-form");
+  
+  async function handleSubmit(event) {
+    console.log("handleSubmit");
+    event.preventDefault();
+    var status = document.getElementById("my-form-status");
+    var data = new FormData(event.target);
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      status.innerHTML = "Your message has been sent. Thank you!";
+      form.reset()
+    }).catch(error => {
+      status.innerHTML = "Oops! There was a problem submitting your message"
+    });
+  }
+  form.addEventListener("submit", handleSubmit)
+</script>
 
 </html>
